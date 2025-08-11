@@ -1,0 +1,17 @@
+node_modules/
+dist/
+dist-electron/
+*.log
+*.db
+.DS_Store
+.env
+.env.local
+build/
+*.dmg
+*.exe
+*.AppImage
+*.snap
+*.deb
+*.rpm
+*.tar.gz
+*.zip

@@ -1,0 +1,611 @@
+YT Beat Video Creator – Full Unified PRD
+1. Product Overview
+YT Beat Video Creator is a cross-platform desktop application that allows music producers to transform beats into high-quality, SEO-optimized, visualized videos and upload them directly to YouTube with minimal effort.
+The app combines:
+* Powerful music visualizer engine for custom, reactive animations.
+* Drag-and-drop simplicity for fast beat-to-video workflow.
+* Integrated YouTube Data API for direct uploading, multi-account management, and scheduling.
+* SEO automation with reusable templates and metadata placeholders.
+* Batch processing for high-volume content creators.
+
+2. Objectives
+Primary
+* Provide a full-featured visualizer core that allows complete customization of animations, effects, and overlays.
+* Streamline the YouTube publishing process for music producers.
+* Make high-quality promotional videos accessible to both novice and professional creators.
+Secondary
+* Integrate an affiliate program for organic growth.
+* Provide offline rendering capabilities for users with limited internet access.
+* Maintain performance for quick turnaround on large batches of videos.
+
+3. Target Users
+* Beatmakers and music producers selling beats online.
+* Independent artists and labels.
+* YouTube content creators focusing on music channels.
+
+4. Core Features
+4.1 Visualizer Engine
+1. Waveform Types:
+    * Line waveform (single/mirrored).
+    * Bar waveform (vertical/horizontal).
+    * Filled waveform.
+    * Symmetrical/center-origin waveform.
+    * Particle waveform (points reacting to amplitude).
+2. Spectrum Types:
+    * Frequency bars (linear & radial).
+    * Radial spectrum rings.
+    * Waterfall spectrogram.
+    * Glowing/blended spectrum.
+    * 3D animated bars.
+3. Beat-Reactive Overlays:
+    * User-uploaded PNG/JPG/SVG images (logos, characters, graphics).
+    * Assign reactive behaviors:
+        * Shake/jitter.
+        * Scale pulse.
+        * Rotation.
+        * Opacity flicker.
+        * Color flash.
+4. Background Layers:
+    * Static image.
+    * Looping video.
+    * Animated gradients.
+    * Particle systems (smoke, sparks, stars).
+    * Color-shifting environments.
+5. Audio-Based Triggers:
+    * Bass detection → triggers (e.g., logo shake).
+    * Mid/high frequency response → flashes/particles.
+    * BPM sync → pulsing animations.
+    * Custom amplitude threshold events.
+6. Layer Composition:
+    * Unlimited layers.
+    * Blend modes: normal, add, multiply, screen.
+    * Per-layer scaling, rotation, opacity.
+7. Customization & Presets:
+    * Color pickers for all visual elements.
+    * Animation speed and sensitivity sliders.
+    * Preset library for quick styling.
+    * Keyframe-based animation editor (Advanced Mode).
+
+4.2 YouTube Upload & SEO Automation
+1. SEO Template System:
+    * Store multiple templates with:
+        * Title
+        * Description
+        * Tags
+        * Category
+        * Visibility
+    * Placeholder variables: {beat_name}, {producer_name}, {genre}, {bpm}.
+2. Batch Upload Queue:
+    * Render & upload multiple beats with unique metadata.
+    * Auto-switch between multiple YouTube accounts.
+    * Schedule uploads with date/time.
+3. Direct YouTube Integration:
+    * OAuth 2.0 authentication.
+    * Token persistence with encrypted storage.
+    * Retry failed uploads automatically.
+4. Upload Modes:
+    * Immediate upload.
+    * Scheduled upload.
+    * Render only (save locally).
+
+4.3 Branding Tools
+* Custom watermark/logo upload.
+* Placement options: top left, top right, bottom left, bottom right.
+* Adjustable size and opacity.
+* Persistent across templates.
+
+4.4 Free Tier Limitations
+* Watermark enforced.
+* “Made with YT Beat Video Creator” link in top of description.
+* Limited uploads/day.
+
+5. Technical Specifications
+5.1 Frontend/UI
+* Electron.js – cross-platform desktop app shell.
+* React.js – modular UI framework.
+* Tailwind CSS – styling framework.
+* ShadCN UI – prebuilt, modern UI components.
+5.2 Backend
+* Node.js – core logic, YouTube API calls.
+* SQLite – local storage for templates, upload history.
+* FFmpeg – final rendering/encoding.
+* Fluent-ffmpeg – Node bindings for FFmpeg.
+5.3 Visualizer Engine
+* PixiJS – 2D WebGL rendering for waveforms, spectrums.
+* Three.js – optional 3D visualizations.
+* Web Audio API – real-time FFT analysis for preview.
+* FFT.js – offline frequency analysis for frame rendering.
+5.4 Rendering Pipeline
+1. Real-time preview in PixiJS/Three.js.
+2. Headless rendering to image frames (OffscreenCanvas).
+3. Pipe frames + audio into FFmpeg for final export.
+4. GPU acceleration:
+    * NVENC (Windows/Linux, NVIDIA)
+    * VAAPI (Intel)
+    * Metal (macOS).
+
+6. User Workflow
+Quick Mode
+1. Drag in beat (MP3/WAV/FLAC).
+2. Choose visualizer preset.
+3. Choose SEO template.
+4. Click “Render & Upload”.
+Advanced Mode
+1. Add beat.
+2. Add background + overlays.
+3. Customize visualizer elements.
+4. Configure SEO details.
+5. Add to batch queue.
+6. Render/export or upload directly.
+
+7. Error Handling
+* Invalid Media: Prompt with supported formats.
+* Upload Failure: Retry ×3 with exponential backoff.
+* License Invalid: Grace period before lockout.
+* API Quota Reached: Display warning and reschedule.
+
+8. Deployment
+* macOS: Signed & notarized DMG installer.
+* Windows: Signed NSIS EXE installer.
+* Auto-updates via Electron-updater (delta patching).
+
+9. Performance Targets
+* 3-min 1080p60 video with 3+ visualizer layers rendered in <90 sec on modern hardware.
+* Preview latency under 15ms.
+* Queue stability for 20+ videos.
+
+10. Monetization
+* Freemium – Watermark + link in description.
+* One-time Purchase – $29.99, full unlock.
+* Subscription – $4.99/month, premium features + affiliate program.
+
+If you want, I can now break this into a full development folder/module structure that assigns exact responsibilities for every part of the code — UI components, rendering engine modules, YouTube upload services, licensing checks, etc.
+That would make this PRD truly plug-and-play for devs.
+Do you want me to prepare that?
+
+You said:
+yes
+
+ChatGPT said:
+Perfect — I’ll now expand this into a full development folder/module structure for YT Beat Video Creator, directly mapping from the PRD so a development team can start implementing immediately without guesswork.
+This will include:
+* Folder hierarchy
+* File/module responsibilities
+* Tech stack usage per module
+* Data flow between components
+* Special notes for performance, GPU acceleration, and integration
+
+YT Beat Video Creator – Development Folder & Module Structure
+bash
+CopyEdit
+yt-beat-video-creator/
+│
+├── package.json                # Electron/Node dependencies, scripts
+├── electron-main.js            # Electron main process entry point
+├── preload.js                  # Secure bridge between renderer and Node
+├── tailwind.config.js          # Tailwind CSS config
+├── vite.config.js               # Build config for faster dev w/ Vite
+│
+├── /src                        # Application source code
+│   │
+│   ├── main/                   # Main process (Node) modules
+│   │   ├── app-init.js         # App startup, license check
+│   │   ├── menu.js             # Application menu setup
+│   │   ├── ipc-handlers.js     # IPC listeners for renderer → main comms
+│   │   ├── license-manager.js  # LemonSqueezy API integration & caching
+│   │   ├── settings-manager.js # Loads/saves app settings to SQLite
+│   │   ├── youtube-uploader.js # Handles OAuth, upload queue, retries
+│   │   ├── seo-template.js     # CRUD for SEO templates
+│   │   ├── batch-queue.js      # Manages rendering/upload batch jobs
+│   │   ├── visualizer-renderer.js # Offline render pipeline to FFmpeg
+│   │   ├── audio-analyzer.js   # FFT processing for visualizer
+│   │   ├── file-utils.js       # File handling, format checks, conversions
+│   │   └── db.sqlite           # Local SQLite database
+│   │
+│   ├── renderer/               # Renderer process (React + UI)
+│   │   ├── index.jsx           # React entry point
+│   │   ├── App.jsx             # Main app layout, routing
+│   │   ├── routes/             # Page/section components
+│   │   │   ├── Dashboard.jsx
+│   │   │   ├── QuickMode.jsx
+│   │   │   ├── AdvancedMode.jsx
+│   │   │   ├── VisualizerEditor.jsx
+│   │   │   ├── BatchQueue.jsx
+│   │   │   ├── Templates.jsx
+│   │   │   ├── Settings.jsx
+│   │   │   └── Affiliate.jsx
+│   │   ├── components/         # UI components
+│   │   │   ├── DragDropZone.jsx
+│   │   │   ├── AudioPlayer.jsx
+│   │   │   ├── VisualizerPreview.jsx
+│   │   │   ├── WaveformSelector.jsx
+│   │   │   ├── SpectrumSelector.jsx
+│   │   │   ├── LayerList.jsx
+│   │   │   ├── LayerSettingsPanel.jsx
+│   │   │   ├── SeoForm.jsx
+│   │   │   ├── UploadProgress.jsx
+│   │   │   ├── WatermarkControl.jsx
+│   │   │   ├── ColorPicker.jsx
+│   │   │   └── PresetSelector.jsx
+│   │   ├── hooks/               # Custom React hooks
+│   │   │   ├── useLicense.js
+│   │   │   ├── useVisualizer.js
+│   │   │   └── useBatchQueue.js
+│   │   ├── styles/              # Tailwind + custom styles
+│   │   │   └── globals.css
+│   │   └── assets/              # Icons, default images/videos
+│   │
+│   ├── visualizer/              # Visualizer engine core
+│   │   ├── engine.js            # Orchestration of rendering pipeline
+│   │   ├── audio-fft.js         # FFT.js analysis, band separation
+│   │   ├── waveform/            # Waveform renderers
+│   │   │   ├── line.js
+│   │   │   ├── bar.js
+│   │   │   ├── filled.js
+│   │   │   └── particle.js
+│   │   ├── spectrum/            # Spectrum renderers
+│   │   │   ├── bars.js
+│   │   │   ├── radial.js
+│   │   │   ├── spectrogram.js
+│   │   │   └── glow.js
+│   │   ├── overlays/            # Reactive overlay modules
+│   │   │   ├── image-reactive.js
+│   │   │   ├── particle-system.js
+│   │   │   └── text-reactive.js
+│   │   ├── layers.js            # Layer manager
+│   │   ├── triggers.js          # Audio-based event triggers
+│   │   ├── keyframes.js         # Keyframe-based animation system
+│   │   └── renderer-webgl.js    # PixiJS/Three.js WebGL rendering core
+│   │
+│   ├── ffmpeg/                  # FFmpeg helpers
+│   │   ├── encode.js            # Combine frames/audio → MP4/MOV
+│   │   ├── gpu-accel.js         # Detect & use NVENC/VAAPI/Metal
+│   │   └── utils.js             # Bitrate, codec settings
+│   │
+│   └── utils/                   # Shared utilities
+│       ├── logger.js
+│       ├── validators.js
+│       └── constants.js
+│
+├── /build                       # Compiled production output
+├── /dist                        # Final installers/packages
+└── README.md
+
+Module Responsibilities
+Main Process Modules
+* app-init.js Initializes Electron, checks license via LemonSqueezy API, loads settings from SQLite.
+* youtube-uploader.js Handles OAuth 2.0 login, token storage, YouTube Data API v3 upload calls, retry logic.
+* visualizer-renderer.js Orchestrates offline visualizer rendering:
+    1. Generates frame sequences using PixiJS/Three.js.
+    2. Passes frames + audio into FFmpeg.
+    3. Applies GPU acceleration if available.
+* audio-analyzer.js Runs FFT.js on audio for amplitude, frequency band data, BPM estimation, trigger mapping.
+* license-manager.js Calls LemonSqueezy API for license validation, manages offline grace period.
+
+Renderer Process (UI)
+* QuickMode.jsx Minimal interface — select beat, preset, SEO template, render/upload.
+* AdvancedMode.jsx Full editing — layer stack, waveform/spectrum choice, reactive overlay controls, SEO.
+* VisualizerEditor.jsx Live preview of visualizer with real-time audio analysis, drag/drop to arrange layers.
+
+Visualizer Engine
+* engine.js Core controller for rendering visuals in preview and export.
+* waveform/ & spectrum/ Individual renderer modules for each visual type, easily extendable.
+* overlays/ Effects that can be triggered by audio events (shake, pulse, rotate, etc.).
+* triggers.js Links specific frequency ranges to effect triggers.
+* keyframes.js Allows time-based animation independent of audio input.
+
+FFmpeg Integration
+* gpu-accel.js Detects GPU type and selects correct FFmpeg encoder flags:
+    * NVIDIA: -c:v h264_nvenc
+    * Intel: -vaapi_device
+    * macOS: -c:v h264_videotoolbox
+* encode.js Combines pre-rendered image sequence with audio into final MP4/MOV file.
+
+Data Flow
+1. User imports audio → audio-analyzer.js generates analysis data.
+2. User configures visual layers in UI → stored in project JSON in SQLite.
+3. Visualizer Engine renders preview in WebGL canvas.
+4. On export:
+    * Engine renders frames offscreen.
+    * Frames & audio piped into FFmpeg encode.js.
+    * Output file passed to youtube-uploader.js (if direct upload chosen).
+
+Special Performance Notes
+* Real-time preview uses WebGL (PixiJS) for minimal CPU load.
+* Export uses offscreen rendering + FFmpeg GPU acceleration to handle 4K60 output without frame drops.
+* FFT calculations run in Web Workers so UI remains responsive.
+
+If you want, I can now prepare a development methodology that explains in what order to build these modules, how to test each in isolation, and how to integrate them into the full app so this ships without major rewrites.
+Do you want me to give you that step-by-step dev roadmap next?
+
+You said:
+yes
+
+ChatGPT said:
+
+Thought for 15s
+Awesome. Here is a clear, build-ready development methodology and roadmap for YT Beat Video Creator. It lays out the exact order of work, how to test each piece, and how to integrate everything with minimal rework. No fluff, just the plan.
+Development Roadmap
+0) Groundwork and environment
+* Target OS: Windows 10 or later. macOS 12 or later, Intel and Apple Silicon.
+* Install: Node LTS, pnpm or yarn, Python 3 for build helpers, latest Xcode CLT on macOS, Visual Studio Build Tools on Windows, FFmpeg (system install).
+* Repos and branches:
+    * main: release-ready
+    * develop: integration
+    * feature/*: one feature per branch
+* Package scripts:
+    * dev: start Electron with Vite
+    * build: production build
+    * lint, typecheck, test, e2e
+    * pack:mac, pack:win
+* Coding standards:
+    * TypeScript in both main and renderer
+    * ESLint + Prettier + EditorConfig
+    * Commit lint with Conventional Commits
+1) Sprint plan and order of implementation
+Sprint 1 - App shell and storage
+1. Electron main process with secure preload
+2. React + Tailwind + ShadCN setup
+3. SQLite with better-sqlite3 or Drizzle ORM
+4. Settings manager and local paths
+5. Logger, error boundary, global exception handling
+Sprint 2 - Media I/O and FFmpeg base
+1. Drag and drop for audio and images or video
+2. Media validation and friendly error messages
+3. FFmpeg presence check and encoder capability probe
+4. Simple render: static image + audio to MP4
+5. Progress channel from child process to UI
+Sprint 3 - Visualizer preview engine
+1. PixiJS renderer surface in React
+2. Web Audio API preview player and analyser node
+3. FFT pipeline, band splitting, peak and RMS
+4. Basic waveform and spectrum modules
+5. Sensitivity controls and preset save or load
+Sprint 4 - Offline visualizer export
+1. OffscreenCanvas or headless Chromium page for frame render
+2. Deterministic offline FFT using decoded PCM
+3. Frame writer and FFmpeg mux integration
+4. GPU acceleration detection and selection
+5. Export panel with resolution, fps, bitrate, codec
+Sprint 5 - SEO and templates
+1. SEO template CRUD with placeholders
+2. Title, description, tags, category, visibility forms
+3. Placeholder resolver and validation rules
+4. Default templates and import or export
+Sprint 6 - YouTube integration
+1. OAuth 2.0 flow with encrypted token store
+2. Upload single video with metadata and thumbnail
+3. Scheduling, privacy, category, tags
+4. Retry with exponential backoff and resumable upload
+5. Multi-account selector and auto account switching in queue
+Sprint 7 - Batch queue and job orchestration
+1. Job model: render only, upload only, full pipeline
+2. Concurrency rules and max threads
+3. Per-job progress, pause or resume, cancel
+4. Persisted history with filters and quick re-run
+Sprint 8 - Branding and reactive overlays
+1. Watermark system with placement and opacity
+2. Reactive image overlay module with shake, pulse, rotate, flash
+3. Particle systems and blend modes
+4. Keyframe editor for time-based scenes
+Sprint 9 - Free tier and licensing
+1. LemonSqueezy license check at startup
+2. Grace and offline cache rules
+3. Free tier link insert at top of description
+4. Feature gates for affiliate and premium presets
+Sprint 10 - Polish and release
+1. Theming, accessibility, keyboard nav
+2. Metrics, crash reporting, user opt-in
+3. Windows signing with EV cert, macOS notarization
+4. Auto-update with differential packages
+5. Final QA matrix and performance pass
+2) Implementation details per module
+App shell
+* Secure IPC. Do not expose Node or FS in renderer.
+* Preload exposes only whitelisted functions.
+* Global error handler writes to rotating log files.
+Database and models
+* Tables: settings, seo_templates, accounts, jobs, presets, assets, licenses, history.
+* Migrations versioned in code and applied at boot.
+Media pipeline
+* Decode audio for preview via AudioContext in renderer.
+* Decode audio for offline analysis in main process via ffmpeg -f f32le or audiodecode library.
+* Validate duration, sample rate, channels. Normalize to stereo for output.
+Visualizer engine
+* Preview path: Web Audio API analyser → PixiJS render loop at display fps.
+* Export path: Offline PCM → FFT.js deterministic analysis → OffscreenCanvas render frames → pipe to FFmpeg.
+* Time base authority: export uses exact frame clock to avoid drift, all animations use frame index and audio time.
+FFmpeg encode
+* H.264 default, AAC audio
+* Presets:
+    * Fast social 1080p30, CBR
+    * Quality 1080p60, VBR
+    * 4K60, VBR high bitrate
+* GPU selection:
+    * macOS: -c:v h264_videotoolbox or hevc_videotoolbox
+    * NVIDIA: -c:v h264_nvenc with -rc vbr
+    * Intel: -vaapi_device path and -vf format=nv12,hwupload
+* Fallback to CPU with -threads N if GPU unsupported
+Reactive overlays
+* Bindings:
+    * Bass band triggers shake and scale pulse
+    * Mid band triggers color flash or particle burst
+    * High band triggers rotation or opacity flicker
+* Controls:
+    * Attack, release, floor, ceiling per band
+    * Global sensitivity and smoothing
+* Keyframes:
+    * Timeline with linear and ease curves
+    * Per-parameter tracks: position, rotation, scale, color, opacity
+SEO and templates
+* Placeholders: {beat_name}, {producer_name}, {genre}, {bpm}, {key}, {year}
+* Validation:
+    * Title 100 chars or less
+    * Description length advice and link guard
+    * Tags count and per-tag length checks
+* Free tier insertion of required promotional link at the top of description
+YouTube Data API
+* OAuth device or desktop flow
+* Encrypted token store with auto refresh
+* Resumable upload session with chunk retry
+* Handle 403 quota or 429 rate limit with backoff and reschedule
+Batch queue
+* Job states: pending, rendering, uploading, complete, failed, canceled
+* Safe shutdown and resume
+* Max concurrent renders set in Settings
+* Dependence graph: upload waits for render complete
+Licensing
+* LemonSqueezy webhooks not required for desktop
+* On-demand check and periodic refresh
+* Local cache with expiry and grace
+* Feature gating map checked in renderer via IPC
+3) Testing strategy
+Unit tests
+* Pure functions: placeholder resolver, validators, FFT utilities, color math
+* IPC validators and schema guards with zod
+* Preset import or export round trip
+Integration tests
+* Frame writer to FFmpeg for a 10 second clip
+* OAuth mock with test token storage
+* Job queue start, pause, resume, cancel
+* GPU path smoke tests where available, CPU fallback otherwise
+Visual and audio sync tests
+* Render with metronome click track at known BPM
+* Expect overlay pulse on frame indices that match beat times within a tolerance window
+* Compare preview timeline to export timeline for drift under 5 ms per minute
+End to end tests
+* Scripted run that creates a preset, renders a 30 second video, uploads as Private with schedule next day, then validates history entry
+Performance tests
+* 3 minute 1080p60 with three layers on M-series Mac and mid-tier NVIDIA laptop
+* Measure render time, encoder FPS, memory peaks
+* Stress: 20-job queue with concurrency 3
+4) Quality gates and acceptance criteria
+* Preview latency under 15 ms on a modern machine
+* Export drift under 100 ms over 10 minutes
+* Render success rate 99.5 percent across supported inputs
+* Upload success with automatic retry and clear error reporting
+* All user data stored locally, tokens encrypted at rest
+* App can resume an interrupted queue without data loss
+5) CI and release automation
+* GitHub Actions or GitLab CI
+    * Jobs: lint, typecheck, unit, integration, package
+    * Matrix for macOS and Windows
+* Code signing
+    * macOS: Developer ID Application certificate, hardened runtime, notarize with altool or notarytool
+    * Windows: EV code signing certificate with signtool
+* Auto updates
+    * electron-updater with private update server or GitHub Releases
+    * Delta packages for smaller downloads
+6) Security and privacy
+* IPC schema validation on all messages
+* No direct Node access in renderer
+* Encrypt OAuth tokens and license cache with OS keychain when possible
+* Opt-in analytics only, anonymized, disable switch in Settings
+* Logs exclude tokens and PII
+7) Telemetry and diagnostics
+* Minimal anonymous metrics
+    * Renders per session, avg duration, export failures by code
+* Crash reporter with user consent
+* One-click support bundle: logs, environment info, ffmpeg probe result
+8) Packaging and distribution
+* Windows: NSIS installer with user data under %APPDATA%/YTBeatVideoCreator
+* macOS: DMG with drag-and-drop, data under ~/Library/Application Support/YTBeatVideoCreator
+* First run checks:
+    * FFmpeg found or prompt install help
+    * GPU capability probe with explainers and overrides
+9) Risk register and mitigations
+* FFmpeg GPU variance across systems
+    * Provide CPU fallback, clear selection UI, safe defaults
+* YouTube quota limits
+    * Exponential backoff and user-visible schedule shift
+* Drift between preview and export
+    * Single source of truth for timing in export path, unit tests with clicks
+* Large memory use on 4K60
+    * Chunked frame rendering, frame pool, controlled GC pressure
+* OAuth login failures
+    * Device flow fallback and cached session reuse
+10) Documentation checklist
+* Quick start guide with three screenshots
+* Visualizer cookbook with five presets and how to tweak sensitivity
+* SEO template tips and placeholder directory
+* Troubleshooting for GPU encoders and FFmpeg detection
+* Privacy and telemetry policy in plain language
+11) Example user stories with acceptance criteria
+Story A. Quick render and upload
+* As a producer I drag an MP3 and a background image, pick a preset, click Render and Upload, and the video appears on my channel as Private.
+* Pass if: file uploads with correct title and description, watermark correct, visualizer animation is visible and synced.
+Story B. Reactive logo on bass
+* As a producer I add a PNG logo and set shake on bass with sensitivity 0.7.
+* Pass if: shake is triggered only on low frequency hits, does not trigger on highs, export matches preview.
+Story C. Batch queue to two accounts
+* As a team I queue 8 jobs and split them between two accounts with scheduled times.
+* Pass if: queue completes, accounts auto switch, scheduled times are honored, logs show retries when network toggled.
+Story D. Free tier rule
+* As a free user my video has the required link at the top of the description.
+* Pass if: link is inserted correctly, cannot be removed in UI until upgrade.
+12) Suggested engineering tickets for Sprint 1 to 3
+* FEAT: Electron shell with secure preload and IPC channel bootstrap
+* FEAT: Settings storage with SQLite and typed accessors
+* FEAT: Drag and drop media zone with validation and toasts
+* FEAT: FFmpeg probe and encoder capability service
+* FEAT: Static image plus audio to MP4 export with progress
+* FEAT: PixiJS canvas mount and render loop with FPS meter
+* FEAT: Web Audio analyser and frequency bands with smoothing
+* FEAT: Waveform modules line and bar with color controls
+* CHORE: Logger, error boundary, global exception capture
+* TEST: Unit suite for validators and placeholder resolver
+13) Performance optimization playbook
+* Use OffscreenCanvas for export rendering
+* Pool GPU resources and geometries where possible
+* Precompute FFT windows and band maps
+* Prefer integer math in hot loops where feasible
+* Avoid large data copies between processes, stream frame buffers to encoder
+14) Success metrics for v1
+* Time from drag and drop to uploaded 3 minute 1080p video under 2 minutes on a modern laptop
+* Fewer than 2 support tickets per 1000 renders about sync or upload
+* Crash rate below 0.5 percent of sessions
+* 90 percent first run success on FFmpeg detection or guided install
+
+
+
+
+  **IMPORTANT**: There's a CLAUDE-MEMORY.md file in this directory with global memory system instructions.
+  Please:
+
+  1. Read CLAUDE-MEMORY.md first
+  2. Follow the memory workflow it describes
+  3. Create a CLAUDE.md for this project that includes the memory system instructions
+  4. Use `claude-memory context` and `claude-memory log` throughout our work
+
+  The memory system contains knowledge from previous projects including audio processing, Electron apps,
+  production builds, and more.
+
+  Step 3: Claude Auto-Creates CLAUDE.md
+
+  Claude will then:
+  1. ✅ Read CLAUDE-MEMORY.md
+  2. ✅ Create CLAUDE.md with project instructions + memory integration
+  3. ✅ Use memory system automatically throughout the project
+
+  📋 What Claude Will Include in CLAUDE.md
+
+  # [Your Project Name]
+
+  [Project-specific instructions...]
+
+  # 🧠 MEMORY SYSTEM INTEGRATION
+
+  **CRITICAL**: Use global memory system for all interactions.
+
+  ## Memory Commands:
+  - `claude-memory context "<request>"` - Check before any task
+  - `claude-memory log "<request>" "<solution>" [files]` - Log after completion
+
+  ## Memory contains:
+  - Solutions from previous projects
+  - Audio processing patterns (Auto Master)
+  - Production build fixes
+  - Cross-platform development knowledge
+
+  📖 **See CLAUDE-MEMORY.md for complete workflow.**
+
