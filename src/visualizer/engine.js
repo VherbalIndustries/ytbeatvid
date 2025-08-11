@@ -1,8 +1,7 @@
-import * as PIXI from 'pixi.js';
-import FFT from 'fft.js';
-import { queryMemory } from '../utils/memory';
+const PIXI = require('pixi.js');
+const FFT = require('fft.js');
 
-export class VisualizerEngine {
+class VisualizerEngine {
   constructor(canvas, options = {}) {
     this.canvas = canvas;
     this.options = {
@@ -20,10 +19,7 @@ export class VisualizerEngine {
   }
 
   async init() {
-    // Check memory for visualizer patterns
-    const memories = await queryMemory('visualizer waveform spectrum');
-    console.log('Found visualizer memories:', memories.length);
-
+    // Initialize PIXI application
     this.app = new PIXI.Application({
       view: this.canvas,
       width: this.options.width,
@@ -206,4 +202,4 @@ export class VisualizerEngine {
   }
 }
 
-export default VisualizerEngine;
+module.exports = VisualizerEngine;

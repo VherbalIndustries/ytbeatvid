@@ -1,12 +1,14 @@
-const { ipcMain, dialog } = require('electron');
+const { ipcMain, dialog, shell } = require('electron');
 const db = require('./db');
 const { checkFFmpeg, getEncoders } = require('../ffmpeg/utils');
 const { renderVideo } = require('../ffmpeg/encode');
 const YouTubeUploader = require('./youtube-uploader');
 const SeoTemplateManager = require('./seo-templates');
 const BatchQueue = require('./batch-queue');
+const SettingsManager = require('./settings-manager');
 
 // Initialize services
+const settingsManager = new SettingsManager();
 const youtubeUploader = new YouTubeUploader();
 const seoManager = new SeoTemplateManager();
 const batchQueue = new BatchQueue();
@@ -54,6 +56,27 @@ ipcMain.handle('settings:set', (event, key, value) => {
     JSON.stringify(value)
   );
   return true;
+});
+
+ipcMain.handle('settings:setYouTubeCredentials', (event, clientId, clientSecret) => {
+  return settingsManager.setYouTubeCredentials(clientId, clientSecret);
+});
+
+ipcMain.handle('settings:getYouTubeCredentials', () => {
+  return settingsManager.getYouTubeCredentials();
+});
+
+ipcMain.handle('settings:isFirstRun', () => {
+  return settingsManager.isFirstRun();
+});
+
+ipcMain.handle('settings:getConfig', () => {
+  return settingsManager.getConfig();
+});
+
+// External links
+ipcMain.handle('shell:openExternal', (event, url) => {
+  return shell.openExternal(url);
 });
 
 // Dialog operations

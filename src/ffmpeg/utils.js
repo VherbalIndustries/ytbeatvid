@@ -1,25 +1,30 @@
 const ffmpeg = require('fluent-ffmpeg');
+const ffmpegStatic = require('ffmpeg-static');
 const { exec } = require('child_process');
 const { promisify } = require('util');
 
 const execAsync = promisify(exec);
 
+// Set FFmpeg path to bundled binary
+ffmpeg.setFfmpegPath(ffmpegStatic);
+
 async function checkFFmpeg() {
   try {
-    await execAsync('ffmpeg -version');
-    return { installed: true, version: await getFFmpegVersion() };
+    // Use bundled FFmpeg binary
+    await execAsync(`"${ffmpegStatic}" -version`);
+    return { installed: true, version: await getFFmpegVersion(), path: ffmpegStatic };
   } catch (error) {
-    return { installed: false, error: 'FFmpeg not found' };
+    return { installed: false, error: 'Bundled FFmpeg not found' };
   }
 }
 
 async function getFFmpegVersion() {
   try {
-    const { stdout } = await execAsync('ffmpeg -version');
+    const { stdout } = await execAsync(`"${ffmpegStatic}" -version`);
     const match = stdout.match(/ffmpeg version ([\d.]+)/);
-    return match ? match[1] : 'unknown';
+    return match ? match[1] : 'bundled';
   } catch {
-    return 'unknown';
+    return 'bundled';
   }
 }
 
@@ -40,7 +45,7 @@ async function getEncoders() {
 
   for (const encoder of gpuEncoders) {
     try {
-      const { stdout } = await execAsync(`ffmpeg -hide_banner -encoders | grep ${encoder.name}`);
+      const { stdout } = await execAsync(`"${ffmpegStatic}" -hide_banner -encoders | grep ${encoder.name}`);
       if (stdout.includes(encoder.name)) {
         encoders.gpu.push({ name: encoder.name, type: encoder.type });
       }

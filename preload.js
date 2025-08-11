@@ -35,6 +35,13 @@ contextBridge.exposeInMainWorld('electronAPI', {
   // Settings
   settings: {
     get: (key) => ipcRenderer.invoke('settings:get', key),
-    set: (key, value) => ipcRenderer.invoke('settings:set', key, value)
-  }
+    set: (key, value) => ipcRenderer.invoke('settings:set', key, value),
+    setYouTubeCredentials: (clientId, clientSecret) => ipcRenderer.invoke('settings:setYouTubeCredentials', clientId, clientSecret),
+    getYouTubeCredentials: () => ipcRenderer.invoke('settings:getYouTubeCredentials'),
+    isFirstRun: () => ipcRenderer.invoke('settings:isFirstRun'),
+    getConfig: () => ipcRenderer.invoke('settings:getConfig')
+  },
+
+  // External links
+  openExternal: (url) => ipcRenderer.invoke('shell:openExternal', url)
 });
