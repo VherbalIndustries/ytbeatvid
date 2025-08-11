@@ -1,7 +1,8 @@
 // Mock licensing system for testing
 class LicenseManager {
   constructor() {
-    this.licenseType = 'free'; // 'free', 'premium', 'lifetime'
+    // Default to lifetime for testing, free for production
+    this.licenseType = process.env.NODE_ENV === 'development' ? 'lifetime' : 'free';
     this.features = this.getLicenseFeatures();
   }
 

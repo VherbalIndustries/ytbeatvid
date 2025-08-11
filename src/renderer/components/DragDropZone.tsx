@@ -2,10 +2,17 @@ import React, { useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { Upload } from 'lucide-react';
 
-export function DragDropZone() {
+interface DragDropZoneProps {
+  onFileSelect?: (file: File) => void;
+}
+
+export function DragDropZone({ onFileSelect }: DragDropZoneProps) {
   const onDrop = useCallback((acceptedFiles: File[]) => {
     console.log('Files dropped:', acceptedFiles);
-  }, []);
+    if (acceptedFiles.length > 0 && onFileSelect) {
+      onFileSelect(acceptedFiles[0]);
+    }
+  }, [onFileSelect]);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,

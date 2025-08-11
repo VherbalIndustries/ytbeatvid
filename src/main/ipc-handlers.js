@@ -2,7 +2,10 @@ const { ipcMain, dialog, shell } = require('electron');
 const db = require('./db');
 const { checkFFmpeg, getEncoders } = require('../ffmpeg/utils');
 const { renderVideo } = require('../ffmpeg/encode');
-const YouTubeUploader = require('./youtube-uploader');
+// Use mock uploader in development, real uploader in production
+const YouTubeUploader = process.env.NODE_ENV === 'development' 
+  ? require('./mock-uploader') 
+  : require('./youtube-uploader');
 const SeoTemplateManager = require('./seo-templates');
 const BatchQueue = require('./batch-queue');
 const SettingsManager = require('./settings-manager');

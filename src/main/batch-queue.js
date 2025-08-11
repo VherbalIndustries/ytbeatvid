@@ -2,8 +2,12 @@ const EventEmitter = require('events');
 const db = require('./db');
 const OfflineRenderer = require('../visualizer/offline-renderer');
 const { renderFromFrames } = require('../ffmpeg/encode');
-const YouTubeUploader = require('./youtube-uploader');
+// Use mock uploader in development, real uploader in production
+const YouTubeUploader = process.env.NODE_ENV === 'development' 
+  ? require('./mock-uploader') 
+  : require('./youtube-uploader');
 const SeoTemplateManager = require('./seo-templates');
+const TestMode = require('./test-mode');
 
 class BatchQueue extends EventEmitter {
   constructor() {
@@ -13,6 +17,7 @@ class BatchQueue extends EventEmitter {
     this.maxConcurrency = 1; // Start with 1, can be increased
     this.youtubeUploader = new YouTubeUploader();
     this.seoManager = new SeoTemplateManager();
+    this.testMode = new TestMode();
   }
 
   addJob(jobData) {
