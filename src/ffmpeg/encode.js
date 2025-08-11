@@ -69,30 +69,65 @@ async function renderVideo(options, onProgress) {
   });
 }
 
-async function extractAudioWaveform(audioPath) {
+async function renderFromFrames(frameDir, audioPath, outputPath, options = {}) {
+  const {
+    fps = 30,
+    resolution = '1920x1080',
+    bitrate = '8000k',
+    audioCodec = 'aac',
+    audioBitrate = '320k'
+  } = options;
+
+  const encoders = await getEncoders();
+  const encoder = getOptimalEncoder(encoders);
+
   return new Promise((resolve, reject) => {
-    const samples = [];
-    
-    ffmpeg(audioPath)
+    const command = ffmpeg()
+      .input(`${frameDir}/frame_%06d.png`)
+      .inputFPS(fps)
+      .input(audioPath)
+      .videoCodec(encoder)
+      .videoBitrate(bitrate)
+      .size(resolution)
+      .fps(fps)
+      .audioCodec(audioCodec)
+      .audioBitrate(audioBitrate)
       .outputOptions([
-        '-f f32le',
-        '-ac 1',
-        '-ar 8000'
-      ])
-      .on('error', reject)
-      .pipe()
-      .on('data', (chunk) => {
-        for (let i = 0; i < chunk.length; i += 4) {
-          samples.push(chunk.readFloatLE(i));
-        }
+        '-shortest',
+        '-pix_fmt yuv420p',
+        '-movflags +faststart'
+      ]);
+
+    // Add GPU-specific options
+    if (encoder.includes('nvenc')) {
+      command.outputOptions([
+        '-preset p4',
+        '-tune hq',
+        '-rc vbr',
+        '-cq 23'
+      ]);
+    } else if (encoder.includes('videotoolbox')) {
+      command.outputOptions([
+        '-profile:v high',
+        '-level:v 4.2'
+      ]);
+    }
+
+    command
+      .on('progress', (progress) => {
+        console.log(`Encoding progress: ${progress.percent}%`);
       })
       .on('end', () => {
-        resolve(samples);
-      });
+        resolve({ success: true, outputPath });
+      })
+      .on('error', (err) => {
+        reject(err);
+      })
+      .save(outputPath);
   });
 }
 
 module.exports = {
   renderVideo,
-  extractAudioWaveform
+  renderFromFrames
 };
